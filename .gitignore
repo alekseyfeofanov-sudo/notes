@@ -1,9 +1,21 @@
-# Python virtual environment
-.venv/
-
-# Python cache
+# --- Python ---
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# SQLite database
-notes.db
+# --- Virtual environment ---
+.venv/
+
+# --- Environment variables ---
+.env
+
+# --- SQLite ---
+*.db
+*.sqlite3
+
+# --- VS Code ---
+.vscode/
+
+# --- macOS ---
+.DS_Store

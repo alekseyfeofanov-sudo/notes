@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 
 from db import get_conn
-from models import Note, NoteCreate
+from models import Note, NoteCreate, NoteUpdate
 
 router = APIRouter()
 
@@ -31,6 +31,24 @@ def create_note(payload: NoteCreate) -> Note:
             "SELECT id, text, created_at FROM notes WHERE id = ?",
             (note_id,),
         ).fetchone()
+    return Note(**dict(row))
+
+
+@router.put("/notes/{note_id}", response_model=Note)
+def update_note(note_id: int, payload: NoteUpdate) -> Note:
+    with get_conn() as conn:
+        cur = conn.execute(
+            "UPDATE notes SET text = ? WHERE id = ?",
+            (payload.text, note_id),
+        )
+        if cur.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Note not found")
+
+        row = conn.execute(
+            "SELECT id, text, created_at FROM notes WHERE id = ?",
+            (note_id,),
+        ).fetchone()
+
     return Note(**dict(row))
 
 
